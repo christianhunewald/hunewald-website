@@ -13,7 +13,8 @@ $files = @(
     "style.css",
     "blog.html",
     "admin.html",
-    "save_posts.php"
+    "save_posts.php",
+    "web.config"
 )
 
 function Log-Message {
