@@ -314,20 +314,20 @@ fetch('/posts.json')
       <div class="form-row">
         <div class="form-field">
           <label>Vorname</label>
-          <input type="text" placeholder="Max" required />
+          <input id="f-vorname" type="text" placeholder="Max" required />
         </div>
         <div class="form-field">
           <label>Nachname</label>
-          <input type="text" placeholder="Mustermann" />
+          <input id="f-nachname" type="text" placeholder="Mustermann" />
         </div>
       </div>
       <div class="form-field">
         <label>E-Mail</label>
-        <input type="email" placeholder="deine@email.de" required />
+        <input id="f-email" type="email" placeholder="deine@email.de" required />
       </div>
       <div class="form-field">
         <label>Anliegen (grob)</label>
-        <select>
+        <select id="f-anliegen">
           <option value="">Bitte wählen...</option>
           <option>Innere Klarheit / Orientierung</option>
           <option>Wichtige Entscheidung</option>
@@ -339,10 +339,11 @@ fetch('/posts.json')
       </div>
       <div class="form-field">
         <label>Nachricht (optional)</label>
-        <textarea placeholder="Was bewegt dich gerade? Du kannst so viel oder so wenig teilen, wie du möchtest."></textarea>
+        <textarea id="f-nachricht" placeholder="Was bewegt dich gerade? Du kannst so viel oder so wenig teilen, wie du möchtest."></textarea>
       </div>
-      <button type="submit" class="btn-primary" style="width:fit-content;border:none;cursor:pointer;">Anfrage absenden</button>
+      <button id="f-submit" type="submit" class="btn-primary" style="width:fit-content;border:none;cursor:pointer;">Anfrage absenden</button>
       <div id="form-msg" style="font-size:0.85rem;color:#c9a84c;display:none;margin-top:0.5rem;">✓ Danke — ich melde mich bald bei dir.</div>
+      <div id="form-err" style="font-size:0.85rem;color:#c0392b;display:none;margin-top:0.5rem;">⚠ Es ist ein Fehler aufgetreten. Bitte versuche es erneut oder schreib mir direkt.</div>
     </form>
     <div class="contact-info">
       <p>Das Erstgespräch ist kostenlos und unverbindlich. Es dient dazu, dein Anliegen kennenzulernen und gemeinsam zu schauen, ob Klärungshilfe der richtige nächste Schritt für dich ist.</p>
@@ -350,7 +351,7 @@ fetch('/posts.json')
         <div class="contact-item-icon">✉</div>
         <div>
           <div class="contact-item-label">E-Mail</div>
-          <div class="contact-item-text">deine@email.de</div>
+          <div class="contact-item-text">christian@hunewald.de</div>
         </div>
       </div>
       <div class="contact-item">
@@ -374,8 +375,8 @@ fetch('/posts.json')
 <!-- FOOTER -->
 <footer>
   <div class="footer-logo">Christian Hunewald<span>.</span></div>
-  <p>Klärungshilfe · Besondere Form der Meditation · Deutschland</p>
-  <p>© 2025 Christian · Alle Rechte vorbehalten</p>
+  <p>Klärungshilfe · Mediation · Konfliktbegleitung · Deutschland</p>
+  <p>© 2025 Christian Hunewald · Alle Rechte vorbehalten</p>
 </footer>
 
 <script>
