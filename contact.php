@@ -34,29 +34,56 @@ if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
     exit;
 }
 
-// Build email
-$to      = 'christian@hunewald.de';
-$subject = '=?UTF-8?B?' . base64_encode('Neue Anfrage von ' . $vorname . ' ' . $nachname) . '?=';
+// Load SMTP password from external file (not in GitHub)
+$passwordFile = __DIR__ . '/smtp_password.txt';
+if (!file_exists($passwordFile)) {
+    echo json_encode(['ok' => false, 'error' => 'Server configuration error']);
+    exit;
+}
+$smtpPassword = trim(file_get_contents($passwordFile));
 
-$body  = "Neue Kontaktanfrage ueber hunewald.de\n";
-$body .= "=====================================\n\n";
-$body .= "Name:     " . $vorname . " " . $nachname . "\n";
-$body .= "E-Mail:   " . $email . "\n";
-$body .= "Anliegen: " . ($anliegen ?: 'Keine Angabe') . "\n\n";
-$body .= "Nachricht:\n" . $nachricht . "\n\n";
-$body .= "=====================================\n";
-$body .= "Gesendet am: " . date('d.m.Y H:i') . "\n";
+// Load PHPMailer
+require __DIR__ . '/phpmailer/PHPMailer.php';
+require __DIR__ . '/phpmailer/SMTP.php';
+require __DIR__ . '/phpmailer/Exception.php';
 
-$headers  = "From: noreply@hunewald.de\r\n";
-$headers .= "Reply-To: " . $email . "\r\n";
-$headers .= "Content-Type: text/plain; charset=UTF-8\r\n";
-$headers .= "X-Mailer: PHP/" . phpversion() . "\r\n";
+use PHPMailer\PHPMailer\PHPMailer;
+use PHPMailer\PHPMailer\Exception;
+use PHPMailer\PHPMailer\SMTP;
 
-$sent = mail($to, $subject, $body, $headers);
+$mail = new PHPMailer(true);
 
-if ($sent) {
+try {
+    // Server settings
+    $mail->isSMTP();
+    $mail->Host       = 'smtp.gmail.com';
+    $mail->SMTPAuth   = true;
+    $mail->Username   = 'christian.hunewald@gmail.com';
+    $mail->Password   = $smtpPassword;
+    $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
+    $mail->Port       = 587;
+    $mail->CharSet    = 'UTF-8';
+
+    // Recipients
+    $mail->setFrom('christian.hunewald@gmail.com', 'hunewald.de Kontaktformular');
+    $mail->addAddress('christian.hunewald@gmail.com', 'Christian Hunewald');
+    $mail->addReplyTo($email, $vorname . ' ' . $nachname);
+
+    // Content
+    $mail->Subject = 'Neue Anfrage von ' . $vorname . ' ' . $nachname;
+    $body  = "Neue Kontaktanfrage ueber hunewald.de\n";
+    $body .= "=====================================\n\n";
+    $body .= "Name:     " . $vorname . " " . $nachname . "\n";
+    $body .= "E-Mail:   " . $email . "\n";
+    $body .= "Anliegen: " . ($anliegen ?: 'Keine Angabe') . "\n\n";
+    $body .= "Nachricht:\n" . $nachricht . "\n\n";
+    $body .= "=====================================\n";
+    $body .= "Gesendet am: " . date('d.m.Y H:i') . "\n";
+    $mail->Body = $body;
+
+    $mail->send();
     echo json_encode(['ok' => true]);
-} else {
-    echo json_encode(['ok' => false, 'error' => 'E-Mail konnte nicht gesendet werden']);
+} catch (Exception $e) {
+    echo json_encode(['ok' => false, 'error' => 'Mailer Error: ' . $mail->ErrorInfo]);
 }
 ?>
