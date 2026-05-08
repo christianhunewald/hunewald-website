@@ -18,10 +18,10 @@ if (!$data) {
 }
 
 // Sanitize inputs
-$vorname  = htmlspecialchars(strip_tags($data['vorname'] ?? ''));
-$nachname = htmlspecialchars(strip_tags($data['nachname'] ?? ''));
-$email    = filter_var($data['email'] ?? '', FILTER_SANITIZE_EMAIL);
-$anliegen = htmlspecialchars(strip_tags($data['anliegen'] ?? ''));
+$vorname   = htmlspecialchars(strip_tags($data['vorname'] ?? ''));
+$nachname  = htmlspecialchars(strip_tags($data['nachname'] ?? ''));
+$email     = filter_var($data['email'] ?? '', FILTER_SANITIZE_EMAIL);
+$anliegen  = htmlspecialchars(strip_tags($data['anliegen'] ?? ''));
 $nachricht = htmlspecialchars(strip_tags($data['nachricht'] ?? ''));
 
 if (empty($vorname) || empty($email)) {
@@ -38,7 +38,7 @@ if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
 $to      = 'christian@hunewald.de';
 $subject = '=?UTF-8?B?' . base64_encode('Neue Anfrage von ' . $vorname . ' ' . $nachname) . '?=';
 
-$body = "Neue Kontaktanfrage ueber hunewald.de\n";
+$body  = "Neue Kontaktanfrage ueber hunewald.de\n";
 $body .= "=====================================\n\n";
 $body .= "Name:     " . $vorname . " " . $nachname . "\n";
 $body .= "E-Mail:   " . $email . "\n";
