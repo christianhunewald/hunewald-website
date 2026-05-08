@@ -381,8 +381,41 @@ fetch('/posts.json')
 <script>
   function handleSubmit(e) {
     e.preventDefault();
-    document.getElementById('form-msg').style.display = 'block';
-    e.target.reset();
+    var btn = document.getElementById('f-submit');
+    btn.textContent = 'Wird gesendet...';
+    btn.disabled = true;
+
+    var data = {
+      vorname:   document.getElementById('f-vorname').value,
+      nachname:  document.getElementById('f-nachname').value,
+      email:     document.getElementById('f-email').value,
+      anliegen:  document.getElementById('f-anliegen').value,
+      nachricht: document.getElementById('f-nachricht').value
+    };
+
+    fetch('/contact.php', {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify(data)
+    })
+    .then(function(r){ return r.json(); })
+    .then(function(res){
+      if (res.ok) {
+        document.getElementById('form-msg').style.display = 'block';
+        document.getElementById('form-err').style.display = 'none';
+        e.target.reset();
+      } else {
+        document.getElementById('form-err').style.display = 'block';
+        document.getElementById('form-msg').style.display = 'none';
+      }
+      btn.textContent = 'Anfrage absenden';
+      btn.disabled = false;
+    })
+    .catch(function(){
+      document.getElementById('form-err').style.display = 'block';
+      btn.textContent = 'Anfrage absenden';
+      btn.disabled = false;
+    });
   }
 
   // Scroll reveal

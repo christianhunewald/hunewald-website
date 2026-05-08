@@ -14,7 +14,8 @@ $files = @(
     "blog.html",
     "admin.html",
     "save_posts.php",
-    "web.config"
+    "web.config",
+    "contact.php"
 )
 
 function Log-Message {
