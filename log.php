@@ -397,8 +397,12 @@ body{background:var(--bg);font-family:var(--sans);font-size:13px;color:var(--tex
     <div class="rule-line"><?= $rule_line ?></div>
 
     <!-- FOOTER -->
-    <div style="background:#f0f0ec;border-top:1px solid var(--border);padding:5px 10px;font-size:8px;color:var(--text-light);text-align:center;line-height:1.5;">
-      Filed <?= htmlspecialchars($c['timestamp'] ?? '') ?> &nbsp;·&nbsp; Card ID: <?= htmlspecialchars(substr($c['id'] ?? '', 0, 20)) ?>
+    <div style="background:#f0f0ec;border-top:1px solid var(--border);padding:6px 10px;display:flex;align-items:center;justify-content:space-between;">
+      <span style="font-size:8px;color:var(--text-light);font-family:var(--mono);">Filed <?= htmlspecialchars($c['timestamp'] ?? '') ?></span>
+      <button onclick="deleteCard('<?= htmlspecialchars($c['id'] ?? '') ?>', this)"
+        style="padding:4px 12px;background:transparent;border:1px solid #c0392b;border-radius:2px;color:#c0392b;font-family:var(--mono);font-size:9px;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;cursor:pointer;">
+        ✕ Delete
+      </button>
     </div>
 
   </div><!-- /card-body -->
@@ -414,6 +418,35 @@ function toggle(id) {
   const hint = document.getElementById('hint-'+idx);
   const open = body.classList.toggle('open');
   if (hint) hint.textContent = open ? '▲ collapse' : '▼ expand';
+}
+
+function deleteCard(id, btn) {
+  if (!confirm('Delete this card? This cannot be undone.')) return;
+  btn.textContent = '...';
+  btn.disabled = true;
+  fetch('delete.php', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ id: id })
+  })
+  .then(r => r.json())
+  .then(d => {
+    if (d.ok) {
+      const card = btn.closest('.filed-card');
+      card.style.transition = 'opacity 0.3s';
+      card.style.opacity = '0';
+      setTimeout(() => { card.remove(); }, 300);
+    } else {
+      btn.textContent = '✕ Delete';
+      btn.disabled = false;
+      alert('Error: ' + (d.error || 'unknown'));
+    }
+  })
+  .catch(() => {
+    btn.textContent = '✕ Delete';
+    btn.disabled = false;
+    alert('Network error — try again.');
+  });
 }
 </script>
 </body>
