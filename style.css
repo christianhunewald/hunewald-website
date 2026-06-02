@@ -823,12 +823,11 @@
         flex-direction: column;
         position: fixed;
         top: 0; left: 0; right: 0; bottom: 0;
-        background: rgba(245,240,232,0.98);
-        backdrop-filter: blur(12px);
+        background: rgba(245,240,232,1);
         justify-content: center;
         align-items: center;
         gap: 2.5rem;
-        z-index: 150;
+        z-index: 1000;
       }
 
       nav ul.open { display: flex; }
