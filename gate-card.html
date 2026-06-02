@@ -1108,6 +1108,12 @@ body {
     <div class="result-row"><span class="k">TIMESTAMP</span><span class="v" id="s-time">—</span></div>
   </div>
   <div style="padding: 0 14px 14px; display: flex; flex-direction: column; gap: 8px;">
+    <div id="saved-note" style="display:none; background:#e8f8ee; border:1px solid #27ae60; border-radius:3px; padding:8px 12px; font-family:var(--mono); font-size:10px; color:#1a7a1a; letter-spacing:0.06em;">
+      ✓ Saved to server log
+    </div>
+    <a href="log.php" style="display:block; padding:11px; background:#1a1a1a; color:white; text-align:center; font-family:var(--mono); font-size:10px; font-weight:700; letter-spacing:0.1em; text-transform:uppercase; text-decoration:none; border-radius:3px;">
+      View Card Log →
+    </a>
     <button class="btn-new-card" style="background: var(--green-btn);" onclick="savePdf()">↓ Save as PDF</button>
     <button class="btn-new-card" onclick="resetCard()">+ New Card</button>
   </div>
@@ -1368,15 +1374,22 @@ function submitCard() {
     hour:'2-digit', minute:'2-digit', second:'2-digit'
   });
 
+  const pair  = document.getElementById('meta-pair').value.toUpperCase();
+  const play  = document.getElementById('meta-playbook').value;
+  const grade = document.getElementById('grade-display').textContent;
+  const sl    = document.getElementById('sl-name').value;
+  const pm1   = document.getElementById('pm1').value;
+  const pm2   = document.getElementById('pm2').value;
+  const pm3   = document.getElementById('pm3').value;
+
   document.getElementById('sub-ts').textContent = ts;
   document.getElementById('s-num').textContent  = document.getElementById('card-num').value || '—';
-  document.getElementById('s-pair').textContent = document.getElementById('meta-pair').value.toUpperCase() || '—';
-  document.getElementById('s-play').textContent = document.getElementById('meta-playbook').value || '—';
+  document.getElementById('s-pair').textContent = pair || '—';
+  document.getElementById('s-play').textContent = play || '—';
   document.getElementById('s-type').textContent = cardType === 'rre' ? 'RRE v2' : 'Standard v7';
-  document.getElementById('s-grade').textContent= document.getElementById('grade-display').textContent;
-  document.getElementById('s-sl').textContent   = document.getElementById('sl-name').value || '—';
+  document.getElementById('s-grade').textContent= grade;
+  document.getElementById('s-sl').textContent   = sl || '—';
   document.getElementById('s-sltp').textContent = (document.getElementById('sl-pips').value || '—') + ' / ' + (document.getElementById('tp-pips').value || '—');
-  const pm1 = document.getElementById('pm1').value;
   document.getElementById('s-pm1').textContent  = pm1.length > 70 ? pm1.substring(0,70)+'…' : pm1;
   document.getElementById('s-time').textContent = ts;
 
@@ -1385,6 +1398,43 @@ function submitCard() {
   setDot(3, 'done');
   document.getElementById('pbar3').style.width = '100%';
   document.getElementById('progress-label').textContent = 'Card filed ✓';
+
+  // POST to save.php
+  const payload = {
+    ts_de:     ts,
+    card_num:  document.getElementById('card-num').value,
+    card_type: cardType === 'rre' ? 'RRE v2' : 'Standard v7',
+    pair:      pair,
+    direction: document.getElementById('direction') ? document.getElementById('direction').value : '',
+    playbook:  play,
+    size:      document.getElementById('meta-size').value,
+    grade:     grade,
+    sl_name:   sl,
+    sl_pips:   document.getElementById('sl-pips').value,
+    tp_pips:   document.getElementById('tp-pips').value,
+    concern:   document.getElementById('concern-text').value,
+    pm1:       pm1,
+    pm2:       pm2,
+    pm3:       pm3,
+    rre_mech:  document.getElementById('rre-mechanism') ? document.getElementById('rre-mechanism').value : '',
+    h4_dir:    document.getElementById('h4-dir') ? document.getElementById('h4-dir').value : '',
+  };
+
+  fetch('save.php', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(payload)
+  })
+  .then(r => r.json())
+  .then(d => {
+    if (d.ok) {
+      const savedNote = document.getElementById('saved-note');
+      if (savedNote) { savedNote.style.display = 'block'; }
+    }
+  })
+  .catch(() => {
+    // Silent fail — card is still shown as filed
+  });
 }
 
 function ripCard() {
