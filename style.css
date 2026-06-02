@@ -40,7 +40,7 @@
       justify-content: space-between;
       align-items: center;
       padding: 1.4rem 4rem;
-      background: rgba(245,240,232,0.85);
+      background: rgba(245,240,232,0.92);
       backdrop-filter: blur(10px);
       border-bottom: 1px solid rgba(196,98,45,0.12);
     }
@@ -72,6 +72,32 @@
     }
 
     nav a:hover { color: var(--accent); }
+
+    /* ── HAMBURGER ── */
+    .nav-toggle {
+      display: none;
+      flex-direction: column;
+      justify-content: center;
+      gap: 5px;
+      cursor: pointer;
+      padding: 4px;
+      background: none;
+      border: none;
+      z-index: 200;
+    }
+
+    .nav-toggle span {
+      display: block;
+      width: 24px;
+      height: 2px;
+      background: var(--ink);
+      transition: transform 0.3s, opacity 0.3s;
+      transform-origin: center;
+    }
+
+    .nav-toggle.open span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+    .nav-toggle.open span:nth-child(2) { opacity: 0; }
+    .nav-toggle.open span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
 
     /* ── HERO ── */
     .hero {
@@ -673,9 +699,7 @@
 
     .form-field textarea { height: 130px; }
 
-    .contact-info {
-      padding-top: 1rem;
-    }
+    .contact-info { padding-top: 1rem; }
 
     .contact-info p {
       font-size: 0.95rem;
@@ -758,17 +782,18 @@
       to   { transform: rotate(360deg); }
     }
 
-    /* ── RESPONSIVE ── */
+    /* ── TABLET (max 900px) ── */
     @media (max-width: 900px) {
       nav { padding: 1.2rem 2rem; }
-      nav ul { gap: 1.5rem; }
+      nav ul { gap: 1.2rem; }
+      nav a { font-size: 0.72rem; }
 
       .hero { grid-template-columns: 1fr; min-height: auto; }
-      .hero-left { padding: 6rem 2rem 3rem; }
+      .hero-left { padding: 6rem 2.5rem 3rem; }
       .hero-right { min-height: 55vw; }
       .mandala { width: 260px; height: 260px; }
 
-      section { padding: 5rem 2rem; }
+      section { padding: 5rem 2.5rem; }
 
       .what-is,
       .apply-grid,
@@ -776,7 +801,7 @@
       .about { grid-template-columns: 1fr; gap: 3rem; }
 
       .benefits-grid { grid-template-columns: 1fr 1fr; }
-      .process-steps { grid-template-columns: 1fr 1fr; }
+      .process-steps { grid-template-columns: 1fr 1fr !important; }
       .step { border-right: none; border-bottom: 1px solid rgba(196,98,45,0.2); }
 
       .strip { padding: 1rem 2rem; gap: 2rem; }
@@ -784,4 +809,83 @@
 
       .form-row { grid-template-columns: 1fr; }
     }
-  
+
+    /* ── MOBILE (max 600px) ── */
+    @media (max-width: 600px) {
+
+      /* Nav: show hamburger, hide links by default */
+      nav { padding: 1rem 1.2rem; }
+
+      .nav-toggle { display: flex; }
+
+      nav ul {
+        display: none;
+        flex-direction: column;
+        position: fixed;
+        top: 0; left: 0; right: 0; bottom: 0;
+        background: rgba(245,240,232,0.98);
+        backdrop-filter: blur(12px);
+        justify-content: center;
+        align-items: center;
+        gap: 2.5rem;
+        z-index: 150;
+      }
+
+      nav ul.open { display: flex; }
+
+      nav ul li a {
+        font-size: 1.2rem;
+        letter-spacing: 0.2em;
+      }
+
+      /* Hero */
+      .hero { padding-top: 60px; }
+      .hero-left { padding: 3rem 1.4rem 2rem; }
+      .hero-title { font-size: clamp(2.8rem, 11vw, 3.5rem); }
+      .hero-sub { font-size: 0.95rem; max-width: 100%; }
+      .hero-sub-en { font-size: 0.82rem; max-width: 100%; }
+      .hero-cta { flex-direction: column; align-items: flex-start; gap: 0.8rem; }
+      .btn-primary, .btn-ghost { width: 100%; text-align: center; padding: 1rem 1.5rem; }
+      .hero-right { min-height: 70vw; }
+      .mandala { width: 200px; height: 200px; }
+      .hero-quote { font-size: 1.15rem; bottom: 2rem; left: 1.5rem; right: 1.5rem; }
+
+      /* Strip */
+      .strip {
+        padding: 1rem 1.4rem;
+        gap: 1.5rem;
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+      }
+      .strip-item { font-size: 0.7rem; }
+
+      /* Sections */
+      section { padding: 4rem 1.4rem; }
+      .section-title { font-size: clamp(2rem, 9vw, 2.8rem); }
+
+      /* What is */
+      .what-is { gap: 2.5rem; }
+
+      /* Benefits */
+      .benefits-grid { grid-template-columns: 1fr; gap: 2px; }
+
+      /* Process */
+      .process-steps { grid-template-columns: 1fr !important; }
+
+      /* About */
+      .about { gap: 2rem; }
+      .about-portrait { aspect-ratio: 4/3; }
+      .about-tag { right: 0; font-size: 0.65rem; padding: 0.6rem 1rem; }
+
+      /* Apply */
+      .apply-grid { gap: 2.5rem; }
+      .apply-quote { font-size: 1.2rem; }
+      .apply-visual { padding: 2rem 1.5rem; }
+
+      /* Contact */
+      .contact-grid { gap: 2.5rem; }
+      .contact-info p { margin-bottom: 1.5rem; }
+
+      /* Footer */
+      footer { padding: 1.5rem 1.4rem; gap: 0.8rem; }
+    }

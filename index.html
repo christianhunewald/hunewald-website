@@ -12,12 +12,16 @@
 <!-- NAV -->
 <nav>
   <div class="nav-logo">Christian Hunewald<span>.</span></div>
-  <ul>
-    <li><a href="#was">Was ist es</a></li>
-    <li><a href="#vorteile">Vorteile</a></li>
-    <li><a href="#anwendung">Anwendung</a></li>
-    <li><a href="#ueber">Über mich</a></li>
-    <li><a href="#blog">Blog</a></li><li><a href="#kontakt">Kontakt</a></li>
+  <button class="nav-toggle" id="nav-toggle" aria-label="Menü öffnen">
+    <span></span><span></span><span></span>
+  </button>
+  <ul id="nav-menu">
+    <li><a href="#was" class="nav-link">Was ist es</a></li>
+    <li><a href="#vorteile" class="nav-link">Vorteile</a></li>
+    <li><a href="#anwendung" class="nav-link">Anwendung</a></li>
+    <li><a href="#ueber" class="nav-link">Über mich</a></li>
+    <li><a href="#blog" class="nav-link">Blog</a></li>
+    <li><a href="#kontakt" class="nav-link">Kontakt</a></li>
   </ul>
 </nav>
 
@@ -431,6 +435,25 @@ fetch('/posts.json')
     el.style.transform = 'translateY(20px)';
     el.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
     observer.observe(el);
+  });
+</script>
+
+<script>
+  // Hamburger menu
+  const toggle = document.getElementById('nav-toggle');
+  const menu = document.getElementById('nav-menu');
+  toggle.addEventListener('click', function() {
+    toggle.classList.toggle('open');
+    menu.classList.toggle('open');
+    document.body.style.overflow = menu.classList.contains('open') ? 'hidden' : '';
+  });
+  // Close menu when a link is clicked
+  document.querySelectorAll('.nav-link').forEach(function(link) {
+    link.addEventListener('click', function() {
+      toggle.classList.remove('open');
+      menu.classList.remove('open');
+      document.body.style.overflow = '';
+    });
   });
 </script>
 </body>
